@@ -1,0 +1,499 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf8">
+    <title>Кодирование кода для баннера по умолчанию (loader)</title>
+    <script src="https://banners.adfox.ru/files/base64.js"></script>
+    <link href="https://specs.adfox.ru/uploads/files/adaptive/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    .btn-add {
+        display: none;
+    }
+
+    #pixel-container .row:last-child .btn-add {
+        display: inline-block;
+    }
+
+    #pixel-container .row:last-child .btn-remove {
+        display: none;
+    }
+
+    #puid-container .row:last-child .btn-add {
+        display: inline-block;
+    }
+
+    #puid-container .row:last-child .btn-remove {
+        display: none;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .page_type {
+        display: none;
+    }
+
+    .banner_size {
+        display: none;
+        width: auto;
+    }
+
+    .advises {
+        width: 300px;
+        padding-right: 30px;
+        position: absolute;
+        right: 14%;
+    }
+
+    .advise {
+        margin-bottom: 10px;
+        font-size: 12px;
+    }
+
+    .title {
+        text-align: center;
+        padding: 25px;
+    }
+
+    .code {
+        background: #efefef;
+        padding: 0 4px;
+        border-radius: 2px;
+        display: inline-block;
+    }
+
+    #chPuid {
+        padding-left: 10px;
+        margin-left: 20px;
+        margin-bottom: 70px;
+    }
+
+    #outCode {
+        max-width: 1030px;
+        margin-bottom: 10%;
+    }
+
+    #insCode {
+        max-width: 1030px;
+    }
+
+    .well {
+        max-width: 700px;
+    }
+
+    #input-warning {
+        color: red;
+        vertical-align: middle;
+        line-height: 20px;
+        margin: 20px;
+        margin-left: 80px;
+        margin-top: -10px;
+        font-size: 15px;
+        font-weight: bold;
+    }
+    </style>
+</head>
+
+<body style="max-width: 1200px; /*border: 10px solid transparent;*/ /*border-image: linear-gradient(transparent -50%, #ADF2F7 100%);*/border-image-slice: 1; margin: 0 auto;">
+    <h2 class="title">Кодирование кода для баннера по умолчанию (loader)</h2>
+    <div class="advises">
+        <h4>Советы</h4>
+        <div class="advise">
+            Используйте сторонный код вставки без <span class="code">document.write</span>. Иначе сторонний код не будет выполнен.
+        </div>
+        <div class="advise">
+            Для подстановки случайного числа используйте макрос <span class="code">%system.random%</span>
+        </div>
+        <div class="advise">
+            В кодах, которые устанавливаются в баннер по умолчанию, можно использовать макросы. Макрос - это переменная, которая возвращает данные об объекте (баннере, рекламной кампании, сайте, площадке или некоторые значения, полученные из запроса со страницы сайта) в код баннера или баннера по умолчанию. Список макросов смотрите в <a href="https://sites.help.adfox.ru/page/32#2-6" target="_blank">помощи</a>.
+        </div>
+        <h4>Пример использования макроса в коде:</h4>
+        <div class="advise">
+            <span class="code">&lt;p&gt;</span>Идентификатор площадки: <span class="code">%place.id%</span> <span class="code">&lt;/p&gt;</span> Макрос <span class="code">%place.id%</span> подставит в код баннера идентификатор рекламной площадки, к которой был запрос.
+            <br>
+            <span class="code">&lt;p&gt;</span>Идентификатор площадки: 884617<span class="code">&lt;/p&gt;</span>
+        </div>
+        <h4>Порядок использования:</h4>
+        <div class="advise">
+            <ol>
+                <li>Макросы установите непосредственно в пробрасываемый код;</li>
+                <li>Если тип кода "Сторонний код вставки", перечислите используемые макросы в специальном поле для ввода макросов. Для типа кода "Код вставки ADFOX (loader)" перечисление макросов не требуется;</li>
+                <li>Нажмите кнопку "Кодировать".</li>
+            </ol>
+        </div>
+    </div>
+    <div>
+        <form action="">
+            <div class="row">
+                <div class="offset1">
+                    <h4>Выберите тип кода:</h4>
+                    <label>
+                        <input type="radio" name="code_type" id="adfox_code" value="adfox_code" onclick="page_type_visible(); isOtherTag();" style="margin-top:-2px"> Код вставки ADFOX (loader)
+                    </label>
+                    <label style="margin-bottom: 25px;">
+                        <input type="radio" name="code_type" id="other_code" value="other_code" onclick="page_type_visible(); isAdfoxTag();" style="margin-top:-2px;"> Сторонний код вставки
+                    </label>
+                    <label class="page_type">
+                        <h5>Выберите тип страницы:</h5>
+                        <input type="radio" name="page_type" id="regular_page" value="regular_page" onclick="hidden_visible();banner_size_unvisible();" style="margin-top:-2px"> Обычная
+                    </label>
+                    <label class="page_type" style="margin-bottom: 25px;">
+                        <input type="radio" name="page_type" id="turbo_page" value="turbo_page" onclick="banner_size_visible();hidden_unvisible();" style="margin-top:-2px;"> Турбо страница
+                    </label>
+                    <select class="banner_size" id="banner_size" onchange="showOption(this)">
+                        <option value="1" selected="selected" disabled>Выберите размер баннера Turbo</option>
+                        <option value="300x300">300x300 Turbo</option>
+                        <option value="300x250">300x250 Turbo</option>
+                    </select>
+                    <textarea name="insCode" id="insCode" cols="30" rows="10" class="input-xxlarge hidden" placeholder="Вставьте код"></textarea>
+                    <br>
+                </div>
+            </div>
+            <div id="pixel-container" class="hidden">
+                <div id="input-warning"></div>
+                <div class="row">
+                    <div class="span6 offset1">
+                        <input class="pixel-input" type="text" placeholder="Ссылка на промерочный пиксель" style="width: 100%;height: 20px;" />
+                        <br>
+                    </div>
+                    <div class="span2">
+                        <span class="btn btn-add" onclick="add_pixel()">+</span>
+                        <span class="btn btn-remove" onclick="remove_pixel(this)">-</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Puid-container begin -->
+            <div id="puid-container" class="hidden">
+                <div class="advise" style="margin-left: 100px;">Список макросов доступен по <a href="https://sites.help.adfox.ru/page/32#2-6" target="_blank">ссылке</a></div>
+                <div class="row">
+                    <div class="span6 offset1">
+                        <input class="puid-input" type="text" placeholder="Название макроса в формате %макрос%" style="width: 100%;height: 20;">
+                    </div>
+                    <div class="span2"><span class="btn btn-add" onclick="add_puid()">+</span><span class="btn btn-remove" onclick="remove_puid(this)">-</span></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset1 hidden">
+                    <input id="encode" value="Кодировать" onclick="if (op1.checked){encode_code_adfox()}if (op2.checked){encode_code_other()}" type="button" class="btn btn-primary">
+                </div>
+            </div>
+        </form>
+        <br>
+        <br>
+        <div class="row">
+            <div class="offset1">
+                <textarea readonly name="outCode" id="outCode" style="cursor: text;" cols="30" rows="10" class="input-xxlarge hidden" data="elastic" placeholder="Здесь будет новый код для баннера по умолчанию, скопируйте его и вставьте в интерфейсе ADFOX в поле &quot;Код&quot; с типом &quot;JavaScript&quot;"></textarea>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var banner_size = '';
+
+    function showOption(el) {
+        window.banner_size = (el.options[el.selectedIndex].value);
+        if (banner_size !== '') {
+            hidden_visible();
+        }
+        if (banner_size === '300x300') {
+            window.width_turbo = '300';
+            window.height_turbo = '300';
+        }
+        if (banner_size === '300x250') {
+            window.width_turbo = '300';
+            window.height_turbo = '250';
+        }
+    }
+
+    function banner_size_unvisible() {
+        var adf_paste = document.querySelectorAll(".banner_size");
+        for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+            adf_paste[adf_paste_i].style.display = 'none';
+        }
+        window.banner_size = '';
+        document.getElementById('banner_size').selectedIndex = 0;
+        document.getElementById('outCode').value = '';
+
+    }
+
+    function hidden_unvisible() {
+        var adf_paste = document.querySelectorAll(".hidden");
+        for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+            adf_paste[adf_paste_i].style.display = 'none';
+        }
+        document.getElementById('outCode').value = '';
+    }
+
+    function page_type_visible() {
+        var adf_paste = document.querySelectorAll(".page_type");
+        for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+            adf_paste[adf_paste_i].style.display = 'block';
+        }
+    }
+
+    function hidden_visible() {
+        if (op1.checked) {
+            var adf_paste = document.querySelectorAll(".hidden");
+            for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+                adf_paste[adf_paste_i].style.display = 'block';
+                document.getElementById("puid-container").style.display = "none";
+            }
+        } else {
+            var adf_paste = document.querySelectorAll(".hidden");
+            for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+                adf_paste[adf_paste_i].style.display = 'block';
+            }
+        }
+    }
+
+    function banner_size_visible() {
+        var adf_paste = document.querySelectorAll(".banner_size");
+        for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+            adf_paste[adf_paste_i].style.display = 'block';
+        }
+    }
+
+    var radios = document.querySelectorAll('[name="code_type"]');
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            hidden_visible();
+        }
+    }
+
+    var inpTextarea = document.getElementById('insCode');
+    var outTextarea = document.getElementById('outCode');
+    var op1 = document.getElementById('adfox_code');
+    var op2 = document.getElementById('other_code');
+
+    function add_pixel() {
+        var html = '<div class="row"> <div class="span6 offset1"> <input class="pixel-input" type="text" placeholder="Ссылка на промерочный пиксель" style="width: 100%;height: 20;"> </div> <div class="span2"><span class="btn btn-add" onclick="add_pixel()">+</span><span class="btn btn-remove" onclick="remove_pixel(this)">-</span></div> </div>';
+        var container = document.getElementById('pixel-container');
+        container.insertAdjacentHTML('beforeEnd', html);
+    }
+
+    function remove_pixel(target) {
+        var row = target.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        
+    }
+
+    //puid-container start
+
+    function add_puid() {
+        var html = '<div class="row"><div class="span6 offset1"><input class="puid-input" type="text" placeholder="Название макроса в формате %макрос%" style="width: 100%;height: 20;"/></div><div class="span2"><span class="btn btn-add" onclick="add_puid()">+</span><span class="btn btn-remove" onclick="remove_puid(this)">-</span></div></div>';
+        var container = document.getElementById('puid-container');
+        container.insertAdjacentHTML('beforeEnd', html);
+    }
+
+    function remove_puid(target) {
+        var row = target.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    //puid end
+
+    function getParamsFromCode(code) {
+        var result = /\{([\s\S]+)}/gm.exec(code);
+        return result[1];
+    }
+
+    var puidsValues = [];
+    var newPuidsValues = [];
+
+    function encode_code_other() {
+        if (document.getElementById("insCode").value.includes('window.Ya.adfoxCode.create')) {
+            document.getElementById("input-warning").innerHTML = "Введите сторонний код вместо кода ADFOX!";
+        } else {
+            document.getElementById("input-warning").innerHTML = "";
+            var t = '';
+            var excode = document.getElementById("excode");
+            var insCode = document.getElementById("insCode");
+            var insCodeValue = insCode.value;
+            //var base64_value = base64Code(insCodeValue);
+            var excode_value = fixedEncodeURIComponent(insCodeValue); //escape(plainstr.value);
+            function fixedEncodeURIComponent(str) {
+                return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+                    return '%' + c.charCodeAt(0).toString(16);
+                });
+            }
+
+            function base64Code(str) {
+                return encode(str);
+            }
+
+
+            if (inpTextarea.value) {
+                var pixels = document.getElementsByClassName('pixel-input');
+                var pixelsValues = [];
+                for (var i = 0; i < pixels.length; i++) {
+                    if (pixels[i].value) {
+                        pixelsValues.push(pixels[i].value.trim());
+                    }
+                }
+                if (banner_size !== '') {
+                    t = 'if (window.loadAdFoxBundle) {\n' +
+                        '   window.loadAdFoxBundle({\n' +
+                        '       "data": [\n' +
+                        '           {\n' +
+                        '               "type": "banner.transfer",\n' +
+                        '               "attributes": {\n' +
+                        '                   "width": \"' + width_turbo + '\",\n' +
+                        '                   "height": \"' + height_turbo + '\",\n' +
+                        '                   "htmlEncoded": \"' + excode_value + '\",\n' +
+                        '                   "trackingUrl": "' + pixelsValues.join('|') + '"\n' +
+                        '               }\n' +
+                        '           }\n' +
+                        '       ]\n' +
+                        '   });\n' +
+                        '}\n' +
+                        'document.close();\n';
+                } else {
+                    t = 'if (window.loadAdFoxBundle) {\n' +
+                        '   window.loadAdFoxBundle({\n' +
+                        '       "data": [\n' +
+                        '           {\n' +
+                        '               "type": "banner.transfer",\n' +
+                        '               "attributes": {\n' +
+                        '                   "htmlEncoded": \"' + excode_value + '\",\n' +
+                        '                   "trackingUrl": "' + pixelsValues.join('|') + '"\n' +
+                        '               }\n' +
+                        '           }\n' +
+                        '       ]\n' +
+                        '   });\n' +
+                        '}\n' +
+                        'document.close();\n';
+                }
+                outTextarea.value = t;
+            }
+            if (outCode.value != "") {
+                var puidInp = outCode.value;
+                var puidOut = puidInp;
+                var puids = document.getElementsByClassName('puid-input');
+
+                for (var i = 0; i < puids.length; i++) {
+                    if (puids[i].value) {
+                        puidsValues.push(puids[i].value.trim());
+                    }
+                }
+
+                for (var z = 0; z < puidsValues.length; z++) {
+                    newPuidsValues.push(puidsValues[z].slice(1, -1));
+
+                }
+
+                for (var h = 0; h < newPuidsValues.length; h++) {
+                    const reg = new RegExp("%25" + newPuidsValues[h] + "%25", "g");
+
+                    puidOut = puidOut.replace(reg, "%" + newPuidsValues[h] + "%");
+
+                }
+
+                document.getElementById('outCode').value = puidOut;
+            }
+        }
+    }
+
+
+    function encode_code_adfox() {
+        document.getElementById("input-warning").innerHTML = "";
+        var t = '';
+
+        if (insCode.value.includes('window.Ya.adfoxCode.create')) {
+            if (inpTextarea.value) {
+                var pixels = document.getElementsByClassName('pixel-input');
+                var pixelsValues = [];
+                for (var i = 0; i < pixels.length; i++) {
+                    if (pixels[i].value) {
+                        pixelsValues.push(pixels[i].value.trim());
+                    }
+                }
+
+                var value = getParamsFromCode(inpTextarea.value).trim().replace(/'/g, '"');
+                var valueByString = value.split('\n');
+                var lastIndex = valueByString.length - 1;
+
+                value = '';
+
+                var object = false;
+
+                valueByString.forEach(function(string, index) {
+                    string = string.trim();
+                    if (string !== '') {
+                        if (string.indexOf('}') >= 0) {
+                            object = false;
+                        }
+
+                        string = (object ? '                            ' : '                       ') + string;
+                        value += string + '\n';
+
+                        if (string.indexOf('{') >= 0) {
+                            object = true;
+                        }
+
+                    }
+                });
+
+                if (banner_size !== '') {
+                    t = 'if (window.loadAdFoxBundle) {\n' +
+                        '   window.loadAdFoxBundle({\n' +
+                        '       "data": [\n' +
+                        '           {\n' +
+                        '               "type": "banner.reset",\n' +
+                        '               "attributes": {\n' +
+                        '                   width: "' + width_turbo + '",\n' +
+                        '                   height: "' + height_turbo + '",\n' +
+                        '                   trackingUrl: "' + pixelsValues.join('|') + '",\n' +
+                        '                   options: {\n' +
+                        value +
+                        '                   }\n' +
+                        '               }\n' +
+                        '           }\n' +
+                        '       ]\n' +
+                        '   });\n' +
+                        '}\n' +
+                        'document.close();\n';
+                } else {
+                    t = 'if (window.loadAdFoxBundle) {\n' +
+                        '   window.loadAdFoxBundle({\n' +
+                        '       "data": [\n' +
+                        '           {\n' +
+                        '               "type": "banner.reset",\n' +
+                        '               "attributes": {\n' +
+                        '                   trackingUrl: "' + pixelsValues.join('|') + '",\n' +
+                        '                   options: {\n' +
+                        value +
+                        '                   }\n' +
+                        '               }\n' +
+                        '           }\n' +
+                        '       ]\n' +
+                        '   });\n' +
+                        '}\n' +
+                        'document.close();\n';
+                }
+            }
+
+            outTextarea.value = t;
+        } else {
+            document.getElementById("input-warning").innerHTML = "Некорректный код ADFOX!";
+        }
+    }
+
+    function isAdfoxTag() {
+        var puidnone = document.getElementById("puid-container").style.display;
+        var inpnone = document.getElementById("insCode").style.display;
+        if (puidnone !== inpnone) {
+            document.getElementById("puid-container").style.display = "block";
+        }
+    }
+
+    function isOtherTag() {
+        if (document.getElementById("puid-container").style.display = "block") {
+            document.getElementById("puid-container").style.display = "none";
+        }
+    }
+    </script>
+</body>
+
+</html>

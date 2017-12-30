@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066)http://banners.adfox.ru/files/loader_default_banner_generator.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <title>Кодирование кода для баннера по умолчанию (loader)</title>
+    <script src="base64.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-add {
+            display: none;
+        }
+
+        #pixel-container .row:last-child .btn-add {
+            display: inline-block;
+        }
+
+        #pixel-container .row:last-child .btn-remove {
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .advises {
+            float: right;
+            width: 300px;
+            padding-right: 30px;
+        }
+
+        .advise {
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .title {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .code {
+            background: #efefef;
+            padding: 0 4px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body style="max-width: 1200px; border: 10px solid transparent; border-image: linear-gradient(transparent -50%, #ADF2F7 100%);border-image-slice: 1; margin: 0 auto;">
+
+<h2 class="title">Кодирование кода для баннера по умолчанию (loader)</h2>
+<div class="advises">
+    <h4>Советы</h4>
+    <div class="advise">
+        Используйте сторонный код вставки без <span class="code">document.write</span>. Иначе сторонний код не будет выполнен.
+    </div>
+    <div class="advise">
+        Для подстановки случайного числа используйте макрос <span class="code">%system.random%</span>
+    </div>
+</div>
+<div>
+    <form action="http://banners.adfox.ru/files/loader_default_banner_generator.html">
+        <div class="row">
+            <div class="offset1">
+				<h4>Выберите тип кода:</h4>
+                <label>
+                    <input type="radio" name="code_type" id="adfox_code" value="adfox_code" onclick="visible()" style="margin-top:-2px">
+                    Код вставки ADFOX (loader)
+                </label>
+                <label style="margin-bottom: 25px;">
+                    <input type="radio" name="code_type" id="other_code" onclick="visible()" style="margin-top:-2px;">
+                    Сторонний код вставки
+                </label>
+                <textarea name="insCode" id="insCode" cols="30" rows="10" class="input-xxlarge hidden" placeholder="Вставьте код"></textarea><br>
+            </div>
+        </div>
+
+        <div id="pixel-container" class="hidden">
+            <div class="row">
+                <div class="span6 offset1">
+
+                    <input class="pixel-input" type="text" placeholder="Ссылка на промерочный пиксель" style="width: 100%;height: 20px;"><br>
+                </div>
+                <div class="span2">
+                    <span class="btn btn-add" onclick="add_pixel()">+</span>
+                    <span class="btn btn-remove" onclick="remove_pixel(this)">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="offset1 hidden">
+                <input id="encode" value="Кодировать" onclick="if (op1.checked){encode_code_adfox()}if (op2.checked){encode_code_other()}" type="button" class="btn btn-primary">
+            </div>
+        </div>
+    </form>
+    <br><br>
+    <div class="row">
+        <div class="offset1">
+            <textarea name="outCode" id="outCode" cols="30" rows="10" class="input-xxlarge hidden" data="elastic" placeholder="Здесь будет новый код для баннера по умолчанию, скопируйте его и вставьте в интерфейсе ADFOX в поле &quot;Код&quot; с типом &quot;JavaScript&quot;"></textarea>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function visible() {
+        var adf_paste = document.querySelectorAll(".hidden");
+        for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+            adf_paste[adf_paste_i].style.display = 'block';
+        }
+    }
+
+    var radios = document.querySelectorAll('[name="code_type"]');
+    for (var i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            visible();
+        }
+    }
+
+    var inpTextarea = document.getElementById('insCode');
+    var outTextarea = document.getElementById('outCode');
+    var op1 = document.getElementById('adfox_code');
+    var op2 = document.getElementById('other_code');
+
+    function add_pixel() {
+        var html = '<div class="row"><div class="span6 offset1"><input class="pixel-input" type="text" placeholder="Ссылка на промерочный пиксель" style="width: 100%;height: 20;"/></div><div class="span2"><span class="btn btn-add" onclick="add_pixel()">+</span><span class="btn btn-remove" onclick="remove_pixel(this)">-</span></div></div>';
+        var container = document.getElementById('pixel-container');
+        container.insertAdjacentHTML('beforeEnd', html);
+    }
+
+    function remove_pixel(target) {
+        var row = target.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    function getParamsFromCode(code) {
+        var result = /\{([\s\S]+)}/gm.exec(code);
+        return result[1];
+    }
+
+    function encode_code_other() {
+        var t = '';
+        var excode = document.getElementById("excode");
+        var insCode = document.getElementById("insCode");
+        var insCodeValue = insCode.value;
+        var base64_value = base64Code(insCodeValue);
+        //var excode_value = fixedEncodeURIComponent(insCodeValue);//escape(plainstr.value);
+        function fixedEncodeURIComponent(str) {
+            return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+                return '%' + c.charCodeAt(0).toString(16);
+            });
+        }
+        function base64Code(str){
+            return encode(str);
+        }
+
+
+        if (inpTextarea.value) {
+            var pixels = document.getElementsByClassName('pixel-input');
+            var pixelsValues = [];
+            for (var i = 0; i < pixels.length; i++) {
+                if (pixels[i].value) {
+                    pixelsValues.push(pixels[i].value.trim());
+                }
+            }
+            t = 'if (window.loadAdFoxBundle) {\n' +
+                '	window.loadAdFoxBundle({\n' +
+                '		"data": [\n' +
+                '			{\n' +
+                '				"type": "banner.transfer",\n' +
+                '				"attributes": {\n' +
+                '					"htmlBase64": \'' + base64_value + '\',\n' +
+                '					"trackingUrl": "' + pixelsValues.join('|') + '"\n' +
+                '				}\n' +
+                '			}\n' +
+                '		]\n' +
+                '	});\n' +
+                '}\n' +
+                'document.close();\n';
+            outTextarea.value = t;
+        }
+    }
+
+
+    function encode_code_adfox() {
+        var t = '';
+
+        if (inpTextarea.value) {
+            var pixels = document.getElementsByClassName('pixel-input');
+            var pixelsValues = [];
+            for (var i = 0; i < pixels.length; i++) {
+                if (pixels[i].value) {
+                    pixelsValues.push(pixels[i].value.trim());
+                }
+            }
+
+            var value = getParamsFromCode(inpTextarea.value).trim();
+            var valueByString = value.split('\n');
+            var lastIndex = valueByString.length - 1;
+
+            value = '';
+
+            var object = false;
+
+            valueByString.forEach(function(string, index) {
+                string = string.trim();
+                if (string !== '') {
+                    if (string.indexOf('}') >= 0) {
+                        object = false;
+                    }
+
+                    string = (object ? '							' : '						') + string;
+                    value += string + '\n';
+
+                    if (string.indexOf('{') >= 0) {
+                        object = true;
+                    }
+
+                }
+            });
+
+            t = 'if (window.loadAdFoxBundle) {\n' +
+                '	window.loadAdFoxBundle({\n' +
+                '		"data": [\n' +
+                '			{\n' +
+                '				"type": "banner.reset",\n' +
+                '				"attributes": {\n' +
+                '					trackingUrl: "' + pixelsValues.join('|') + '",\n' +
+                '					options: {\n'
+                + value +
+                '					}\n' +
+                '				}\n' +
+                '			}\n' +
+                '		]\n' +
+                '	});\n' +
+                '}\n' +
+                'document.close();\n';
+        }
+
+        outTextarea.value = t;
+    }
+</script>
+
+</body></html>
