@@ -274,50 +274,44 @@
     }
 
     function removePixelFromOutCode() {
-        pixelsValues = [];
         var x = outCode.value;
         if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] === "|") {
-            var regRemovePixel = new RegExp(removingPixelValue + "[|]", "g");
-            var y = x.replace(regRemovePixel, "");
-            outCode.value = y;
+                var regRemovePixel = new RegExp(removingPixelValue + "[|]", "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;
         } else if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] === "|" && x[x.indexOf(removingPixelValue) - 1] === "|") {
 
-            var regRemovePixel = new RegExp("[|]" + removingPixelValue + "[|]", "g");
-            var y = x.replace(regRemovePixel, "");
-            outCode.value = y;
+                var regRemovePixel = new RegExp("[|]" + removingPixelValue + "[|]", "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;
 
 
         } else if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] !== "|" && x[x.indexOf(removingPixelValue) - 1] === "|") {
 
-            var regRemovePixel = new RegExp("[|]" + removingPixelValue, "g");
-            var y = x.replace(regRemovePixel, "");
-            outCode.value = y;
+                var regRemovePixel = new RegExp("[|]" + removingPixelValue, "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;
 
 
-        } else if ((x[x.indexOf(removingPixelValue) + removingPixelValue.length] !== "|" && x[x.indexOf(removingPixelValue) - 1] === "\"")) {
-            var regRemovePixel = new RegExp(removingPixelValue + "[|]", "g");
-            var y = x.replace(regRemovePixel, "");
-            outCode.value = y;
-        } 
+        }
+
 
         else
 
         {
-            var regRemovePixel = new RegExp(removingPixelValue, "g");
-            var y = x.replace(regRemovePixel, "");
-            outCode.value = y;
+                var regRemovePixel = new RegExp(removingPixelValue, "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;  
         }
-
+        
     }
 
     var removingPixelValue = "";
-
     function remove_pixel(target) {
         removingPixelValue = target.parentNode.parentNode.querySelector('input[type="text"].pixel-input').value;
         var row = target.parentNode.parentNode;
         row.parentNode.removeChild(row);
         removePixelFromOutCode();
-
     }
 
     //puid-container start
@@ -328,9 +322,20 @@
         container.insertAdjacentHTML('beforeEnd', html);
     }
 
+
+    var removingPuidValue = "";
+    function removePuidFromOutCode() {
+        var x = outCode.value;
+        var regRemovePuid = new RegExp(removingPuidValue, "g");
+        var y = x.replace(regRemovePuid, "");
+        outCode.value = y;
+    }
+
     function remove_puid(target) {
+        removingPuidValue = target.parentNode.parentNode.querySelector('input[type="text"].puid-input').value;
         var row = target.parentNode.parentNode;
         row.parentNode.removeChild(row);
+        removePuidFromOutCode();
     }
 
     //puid end
@@ -343,7 +348,6 @@
     var puidsValues = [];
     var newPuidsValues = [];
     var pixelsValues = [];
-
     function encode_code_other() {
         if (document.getElementById("insCode").value.includes('window.Ya.adfoxCode.create')) {
             document.getElementById("input-warning").innerHTML = "Введите сторонний код вместо кода ADFOX!";
@@ -368,7 +372,7 @@
 
             if (inpTextarea.value) {
                 var pixels = document.getElementsByClassName('pixel-input');
-
+                
                 for (var i = 0; i < pixels.length; i++) {
                     if (pixels[i].value) {
                         pixelsValues.push(pixels[i].value.trim());
