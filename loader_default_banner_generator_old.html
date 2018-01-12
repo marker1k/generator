@@ -273,10 +273,45 @@
         container.insertAdjacentHTML('beforeEnd', html);
     }
 
+    function removePixelFromOutCode() {
+        var x = outCode.value;
+        if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] === "|") {
+                var regRemovePixel = new RegExp(removingPixelValue + "[|]", "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;
+        } else if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] === "|" && x[x.indexOf(removingPixelValue) - 1] === "|") {
+
+                var regRemovePixel = new RegExp("[|]" + removingPixelValue + "[|]", "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;
+
+
+        } else if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] !== "|" && x[x.indexOf(removingPixelValue) - 1] === "|") {
+
+                var regRemovePixel = new RegExp("[|]" + removingPixelValue, "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;
+
+
+        }
+
+
+        else
+
+        {
+                var regRemovePixel = new RegExp(removingPixelValue, "g");
+                var y = x.replace(regRemovePixel, "");
+                outCode.value = y;  
+        }
+        
+    }
+
+    var removingPixelValue = "";
     function remove_pixel(target) {
+        removingPixelValue = target.parentNode.parentNode.querySelector('input[type="text"].pixel-input').value;
         var row = target.parentNode.parentNode;
         row.parentNode.removeChild(row);
-        
+        removePixelFromOutCode();
     }
 
     //puid-container start
@@ -301,7 +336,7 @@
 
     var puidsValues = [];
     var newPuidsValues = [];
-
+    var pixelsValues = [];
     function encode_code_other() {
         if (document.getElementById("insCode").value.includes('window.Ya.adfoxCode.create')) {
             document.getElementById("input-warning").innerHTML = "Введите сторонний код вместо кода ADFOX!";
@@ -326,7 +361,7 @@
 
             if (inpTextarea.value) {
                 var pixels = document.getElementsByClassName('pixel-input');
-                var pixelsValues = [];
+                
                 for (var i = 0; i < pixels.length; i++) {
                     if (pixels[i].value) {
                         pixelsValues.push(pixels[i].value.trim());
@@ -384,7 +419,7 @@
                 }
 
                 for (var h = 0; h < newPuidsValues.length; h++) {
-                    const reg = new RegExp("%25" + newPuidsValues[h] + "%25", "g");
+                    var reg = new RegExp("%25" + newPuidsValues[h] + "%25", "g");
 
                     puidOut = puidOut.replace(reg, "%" + newPuidsValues[h] + "%");
 
