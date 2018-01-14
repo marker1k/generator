@@ -293,12 +293,7 @@
                 outCode.value = y;
 
 
-        }
-
-
-        else
-
-        {
+        } else {
                 var regRemovePixel = new RegExp(removingPixelValue, "g");
                 var y = x.replace(regRemovePixel, "");
                 outCode.value = y;  
@@ -488,10 +483,10 @@
                         '           {\n' +
                         '               "type": "banner.reset",\n' +
                         '               "attributes": {\n' +
-                        '                   width: "' + width_turbo + '",\n' +
-                        '                   height: "' + height_turbo + '",\n' +
-                        '                   trackingUrl: "' + pixelsValues.join('|') + '",\n' +
-                        '                   options: {\n' +
+                        '                   "width": "' + width_turbo + '",\n' +
+                        '                   "height": "' + height_turbo + '",\n' +
+                        '                   "trackingUrl": "' + pixelsValues.join('|') + '",\n' +
+                        '                   "options": {\n' +
                         value +
                         '                   }\n' +
                         '               }\n' +
@@ -507,8 +502,8 @@
                         '           {\n' +
                         '               "type": "banner.reset",\n' +
                         '               "attributes": {\n' +
-                        '                   trackingUrl: "' + pixelsValues.join('|') + '",\n' +
-                        '                   options: {\n' +
+                        '                   "trackingUrl": "' + pixelsValues.join('|') + '",\n' +
+                        '                   "options": {\n' +
                         value +
                         '                   }\n' +
                         '               }\n' +
@@ -517,10 +512,27 @@
                         '   });\n' +
                         '}\n' +
                         'document.close();\n';
+
+                        
                 }
             }
 
-            outTextarea.value = t;
+            // outTextarea.value = t;
+            var temp_t = t.replace(/[\n\r]+/g, '');
+            final_t = temp_t.replace(/\s{2,10}/g, ' ');
+            console.log(final_t);
+            var temp_value = value.replace(/[\n\r]+/g, '');
+            final_value = temp_value.replace(/\s{2,10}/g, ' ');
+            console.log(final_value);
+            // final_t.slice(final_t.indexOf('ownerId') - 4, final_t.indexOf('ownerId') + final_value.length)
+            var first_part = final_t.slice(0, final_t.indexOf('ownerId') - 4);
+            var last_part = final_t.slice(final_t.indexOf('ownerId') + final_value.length, final_t.length);
+            var $x = '$x = { ' + value + ' }';
+            $x = eval($x);
+            var y = JSON.stringify($x);
+            console.log(first_part + y + last_part);
+            outTextarea.value = first_part + y + last_part;
+
         } else {
             document.getElementById("input-warning").innerHTML = "Некорректный код ADFOX!";
         }
@@ -541,5 +553,12 @@
     }
     </script>
 </body>
+
+<!-- Extract attributes from outcode:
+
+var str = x.slice(x.indexOf('trackingUrl'), x.indexOf('puid11: ""') + 'puid11: ""'.length + 60); 
+var str = x.slice(x.indexOf('trackingUrl') - 21, x.indexOf('puid11: ""') + 'puid11: ""'.length + 63);
+
+-->
 
 </html>
