@@ -276,32 +276,33 @@
     function removePixelFromOutCode() {
         var x = outCode.value;
         if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] === "|") {
-                var regRemovePixel = new RegExp(removingPixelValue + "[|]", "g");
-                var y = x.replace(regRemovePixel, "");
-                outCode.value = y;
+            var regRemovePixel = new RegExp(removingPixelValue + "[|]", "g");
+            var y = x.replace(regRemovePixel, "");
+            outCode.value = y;
         } else if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] === "|" && x[x.indexOf(removingPixelValue) - 1] === "|") {
 
-                var regRemovePixel = new RegExp("[|]" + removingPixelValue + "[|]", "g");
-                var y = x.replace(regRemovePixel, "");
-                outCode.value = y;
+            var regRemovePixel = new RegExp("[|]" + removingPixelValue + "[|]", "g");
+            var y = x.replace(regRemovePixel, "");
+            outCode.value = y;
 
 
         } else if (x[x.indexOf(removingPixelValue) + removingPixelValue.length] !== "|" && x[x.indexOf(removingPixelValue) - 1] === "|") {
 
-                var regRemovePixel = new RegExp("[|]" + removingPixelValue, "g");
-                var y = x.replace(regRemovePixel, "");
-                outCode.value = y;
+            var regRemovePixel = new RegExp("[|]" + removingPixelValue, "g");
+            var y = x.replace(regRemovePixel, "");
+            outCode.value = y;
 
 
         } else {
-                var regRemovePixel = new RegExp(removingPixelValue, "g");
-                var y = x.replace(regRemovePixel, "");
-                outCode.value = y;  
+            var regRemovePixel = new RegExp(removingPixelValue, "g");
+            var y = x.replace(regRemovePixel, "");
+            outCode.value = y;
         }
-        
+
     }
 
     var removingPixelValue = "";
+
     function remove_pixel(target) {
         removingPixelValue = target.parentNode.parentNode.querySelector('input[type="text"].pixel-input').value;
         var row = target.parentNode.parentNode;
@@ -319,6 +320,7 @@
 
 
     var removingPuidValue = "";
+
     function removePuidFromOutCode() {
         var x = outCode.value;
         var regRemovePuid = new RegExp(removingPuidValue, "g");
@@ -343,6 +345,7 @@
     var puidsValues = [];
     var newPuidsValues = [];
     var pixelsValues = [];
+
     function encode_code_other() {
         if (document.getElementById("insCode").value.includes('window.Ya.adfoxCode.create')) {
             document.getElementById("input-warning").innerHTML = "Введите сторонний код вместо кода ADFOX!";
@@ -367,7 +370,7 @@
 
             if (inpTextarea.value) {
                 var pixels = document.getElementsByClassName('pixel-input');
-                
+
                 for (var i = 0; i < pixels.length; i++) {
                     if (pixels[i].value) {
                         pixelsValues.push(pixels[i].value.trim());
@@ -476,6 +479,17 @@
                     }
                 });
 
+                function validateJSON(tag) {
+                    var x = 'x = { ' + tag + ' }';
+                    var result = eval(x);
+                    return result;
+                }
+
+
+                $x = validateJSON(value);
+                var value = JSON.stringify($x);
+                var value = value.slice(1, -1);
+
                 if (banner_size !== '') {
                     t = 'if (window.loadAdFoxBundle) {\n' +
                         '   window.loadAdFoxBundle({\n' +
@@ -513,22 +527,11 @@
                         '}\n' +
                         'document.close();\n';
 
-                        
+
                 }
             }
 
-            // outTextarea.value = t;
-            var tempT = t.replace(/[\n\r]+/g, '');
-            finalT = tempT.replace(/\s{2,10}/g, ' ');
-            var tempValue = value.replace(/[\n\r]+/g, '');
-            finalValue = tempValue.replace(/\s{2,10}/g, ' ');console.log(final_value);
-            // final_t.slice(final_t.indexOf('ownerId') - 4, final_t.indexOf('ownerId') + final_value.length)
-            var firstPart = finalT.slice(0, finalT.indexOf('ownerId') - 4);
-            var lastPart = finalT.slice(finalT.indexOf('ownerId') + finalValue.length, finalT.length);
-            var $x = '$x = { ' + value + ' }';
-            $x = eval($x);
-            var y = JSON.stringify($x);
-            outTextarea.value = firstPart + y + lastPart;
+            outTextarea.value = t;
 
         } else {
             document.getElementById("input-warning").innerHTML = "Некорректный код ADFOX!";
@@ -550,12 +553,5 @@
     }
     </script>
 </body>
-
-<!-- Extract attributes from outcode:
-
-var str = x.slice(x.indexOf('trackingUrl'), x.indexOf('puid11: ""') + 'puid11: ""'.length + 60); 
-var str = x.slice(x.indexOf('trackingUrl') - 21, x.indexOf('puid11: ""') + 'puid11: ""'.length + 63);
-
--->
 
 </html>
