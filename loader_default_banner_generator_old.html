@@ -518,20 +518,17 @@
             }
 
             // outTextarea.value = t;
-            var temp_t = t.replace(/[\n\r]+/g, '');
-            final_t = temp_t.replace(/\s{2,10}/g, ' ');
-            console.log(final_t);
-            var temp_value = value.replace(/[\n\r]+/g, '');
-            final_value = temp_value.replace(/\s{2,10}/g, ' ');
-            console.log(final_value);
+            var tempT = t.replace(/[\n\r]+/g, '');
+            finalT = tempT.replace(/\s{2,10}/g, ' ');
+            var tempValue = value.replace(/[\n\r]+/g, '');
+            finalValue = tempValue.replace(/\s{2,10}/g, ' ');console.log(final_value);
             // final_t.slice(final_t.indexOf('ownerId') - 4, final_t.indexOf('ownerId') + final_value.length)
-            var first_part = final_t.slice(0, final_t.indexOf('ownerId') - 4);
-            var last_part = final_t.slice(final_t.indexOf('ownerId') + final_value.length, final_t.length);
+            var firstPart = finalT.slice(0, finalT.indexOf('ownerId') - 4);
+            var lastPart = finalT.slice(finalT.indexOf('ownerId') + finalValue.length, finalT.length);
             var $x = '$x = { ' + value + ' }';
             $x = eval($x);
             var y = JSON.stringify($x);
-            console.log(first_part + y + last_part);
-            outTextarea.value = first_part + y + last_part;
+            outTextarea.value = firstPart + y + lastPart;
 
         } else {
             document.getElementById("input-warning").innerHTML = "Некорректный код ADFOX!";
