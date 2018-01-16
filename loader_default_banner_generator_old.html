@@ -5,8 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf8">
     <title>Кодирование кода для баннера по умолчанию (loader)</title>
-    <script src="https://banners.adfox.ru/files/base64.js"></script>
-    <link href="https://specs.adfox.ru/uploads/files/adaptive/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="base64.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
     <style>
     .btn-add {
         display: none;
@@ -141,7 +141,7 @@
                         <input type="radio" name="page_type" id="regular_page" value="regular_page" onclick="hidden_visible();banner_size_unvisible();" style="margin-top:-2px"> Обычная
                     </label>
                     <label class="page_type" style="margin-bottom: 25px;">
-                        <input type="radio" name="page_type" id="turbo_page" value="turbo_page" onclick="banner_size_visible();hidden_unvisible();" style="margin-top:-2px;"> Турбо страница
+                        <input type="radio" name="page_type" id="turbo_page" value="turbo_page" onclick="hidden_visible();" style="margin-top:-2px;"> Турбо страница
                     </label>
                     <select class="banner_size" id="banner_size" onchange="showOption(this)">
                         <option value="1" selected="selected" disabled>Выберите размер баннера Turbo</option>
@@ -192,20 +192,20 @@
     <script type="text/javascript">
     var banner_size = '';
 
-    function showOption(el) {
-        window.banner_size = (el.options[el.selectedIndex].value);
-        if (banner_size !== '') {
-            hidden_visible();
-        }
-        if (banner_size === '300x300') {
-            window.width_turbo = '300';
-            window.height_turbo = '300';
-        }
-        if (banner_size === '300x250') {
-            window.width_turbo = '300';
-            window.height_turbo = '250';
-        }
-    }
+    // function showOption(el) {
+    //     window.banner_size = (el.options[el.selectedIndex].value);
+    //     if (banner_size !== '') {
+    //         hidden_visible();
+    //     }
+    //     if (banner_size === '300x300') {
+    //         window.width_turbo = '300';
+    //         window.height_turbo = '300';
+    //     }
+    //     if (banner_size === '300x250') {
+    //         window.width_turbo = '300';
+    //         window.height_turbo = '250';
+    //     }
+    // }
 
     function banner_size_unvisible() {
         var adf_paste = document.querySelectorAll(".banner_size");
@@ -248,12 +248,12 @@
         }
     }
 
-    function banner_size_visible() {
-        var adf_paste = document.querySelectorAll(".banner_size");
-        for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
-            adf_paste[adf_paste_i].style.display = 'block';
-        }
-    }
+    // function banner_size_visible() {
+    //     var adf_paste = document.querySelectorAll(".banner_size");
+    //     for (var adf_paste_i = 0; adf_paste_i < adf_paste.length; adf_paste_i++) {
+    //         adf_paste[adf_paste_i].style.display = 'block';
+    //     }
+    // }
 
     var radios = document.querySelectorAll('[name="code_type"]');
     for (var i = 0; i < radios.length; i++) {
@@ -376,15 +376,16 @@
                         pixelsValues.push(pixels[i].value.trim());
                     }
                 }
-                if (banner_size !== '') {
+                
+                if (document.getElementById('turbo_page').checked) {
                     t = 'if (window.loadAdFoxBundle) {\n' +
                         '   window.loadAdFoxBundle({\n' +
                         '       "data": [\n' +
                         '           {\n' +
                         '               "type": "banner.transfer",\n' +
                         '               "attributes": {\n' +
-                        '                   "width": \"' + width_turbo + '\",\n' +
-                        '                   "height": \"' + height_turbo + '\",\n' +
+                        '                   "width": \"' + "%place.width%" + '\",\n' +
+                        '                   "height": \"' + "%place.height%" + '\",\n' +
                         '                   "htmlEncoded": \"' + excode_value + '\",\n' +
                         '                   "trackingUrl": "' + pixelsValues.join('|') + '"\n' +
                         '               }\n' +
@@ -393,7 +394,7 @@
                         '   });\n' +
                         '}\n' +
                         'document.close();\n';
-                } else {
+                } else if (document.getElementById('regular_page').checked) {
                     t = 'if (window.loadAdFoxBundle) {\n' +
                         '   window.loadAdFoxBundle({\n' +
                         '       "data": [\n' +
@@ -409,6 +410,8 @@
                         '}\n' +
                         'document.close();\n';
                 }
+
+
                 outTextarea.value = t;
             }
             if (outCode.value != "") {
@@ -488,17 +491,20 @@
 
                 $x = validateJSON(value);
                 var value = JSON.stringify($x);
+                Value = value;
                 var value = value.slice(1, -1);
 
-                if (banner_size !== '') {
+                
+
+                if (document.getElementById('turbo_page').checked) {
                     t = 'if (window.loadAdFoxBundle) {\n' +
                         '   window.loadAdFoxBundle({\n' +
                         '       "data": [\n' +
                         '           {\n' +
                         '               "type": "banner.reset",\n' +
                         '               "attributes": {\n' +
-                        '                   "width": "' + width_turbo + '",\n' +
-                        '                   "height": "' + height_turbo + '",\n' +
+                        '                   "width": "' + "%place.width%" + '",\n' +
+                        '                   "height": "' + "%place.height%" + '",\n' +
                         '                   "trackingUrl": "' + pixelsValues.join('|') + '",\n' +
                         '                   "options": {\n' +
                         value +
@@ -509,7 +515,7 @@
                         '   });\n' +
                         '}\n' +
                         'document.close();\n';
-                } else {
+                } else if (document.getElementById('regular_page').checked) {
                     t = 'if (window.loadAdFoxBundle) {\n' +
                         '   window.loadAdFoxBundle({\n' +
                         '       "data": [\n' +
@@ -526,8 +532,6 @@
                         '   });\n' +
                         '}\n' +
                         'document.close();\n';
-
-
                 }
             }
 
